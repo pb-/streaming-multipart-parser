@@ -1,9 +1,18 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
+
+sourceCompatibility = 11
 
 group 'dev.baecher.multipart'
 version '0.9.7'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     mavenCentral()
@@ -18,4 +27,64 @@ test {
     useJUnitPlatform()
 }
 
-sourceCompatibility = 11
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'streaming-multipart-parser'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'streaming-multipart-parser'
+                description = 'Java library for stream decoding multipart/form-data using constant memory and no disk I/O'
+                url = 'https://github.com/pb-/streaming-multipart-parser'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'pb-'
+                        name = 'Paul Baecher'
+                        email = 'paul@baecher.dev'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/pb-/streaming-multipart-parser.git'
+                    developerConnection = 'scm:git:git@github.com:pb-/streaming-multipart-parser.git'
+                    url = 'https://github.com/pb-/streaming-multipart-parser'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
