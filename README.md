@@ -3,6 +3,13 @@
 A tiny library for decoding `multipart/form-data` that uses constant memory and no disk I/O. No dependencies apart from JDK 11+.
 
 
+## Getting it
+
+ * Group id: `dev.baecher.multipart`
+ * Artifact id: `streaming-multipart-parser`
+ * Version: `0.9.7`
+
+
 ## Usage example
 
 Read all parts and print their file names, content types, and lengths.
