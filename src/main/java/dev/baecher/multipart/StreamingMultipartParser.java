@@ -6,19 +6,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class StreamingMultipartParser implements Iterator<StreamingMultipartParser.Part> {
-    private final int CR = 13;
-    private final int LF = 10;
+    private final int CR = '\r';
+    private final int LF = '\n';
     private final byte[] CRLF = new byte[]{CR, LF};
     private final byte[] CRLFCRLF = new byte[]{CR, LF, CR, LF};
     private final byte[] boundaryMarker;
     private final Buffer buffer;
 
-    private enum Status {EXPECT_HEADER_OR_END, READING_DATA}
+    private enum Status {EXPECT_HEADER_OR_END, READING_PART_DATA}
 
     private Status status;
 
     public StreamingMultipartParser(InputStream is) throws IOException {
-        this(is, 4096);
+        this(is, 0x10000);
     }
 
     public StreamingMultipartParser(InputStream is, int bufferSize) throws IOException {
@@ -74,7 +74,7 @@ public class StreamingMultipartParser implements Iterator<StreamingMultipartPars
             Headers headers = Headers.fromBytes(buffer.consume(off));
             buffer.skip(CRLFCRLF.length);
 
-            status = Status.READING_DATA;
+            status = Status.READING_PART_DATA;
 
             return new Part(headers);
         } catch (IOException e) {
