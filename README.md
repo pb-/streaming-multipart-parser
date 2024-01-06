@@ -9,7 +9,18 @@ Many libraries or frameworks to parse this content type will either put files in
 
  * Group id: `dev.baecher.multipart`
  * Artifact id: `streaming-multipart-parser`
- * Version: `0.9.7`
+ * Version: `0.10.0`
+
+
+## Release notes
+
+### 0.10.0
+
+ * Added [BoundaryInputStream](src/main/java/dev/baecher/io/BoundaryInputStream.java) which gives low-level access to reading a stream until a boundary is hit. In a future release the multipart parser will use this primitive, but it is useful on its own. Includes some basic optimizations over the naive search algorithm.
+
+### 0.9.7
+
+Initial public release
 
 
 ## Usage example
@@ -23,7 +34,7 @@ while (parser.hasNext()) {
     StreamingMultipartParser.Part part = parser.next();
 
     // A convenience method to parse the filename out of the Content-Disposition header
-    System.out.println(part.getHeaders().getFileName());
+    System.out.println(part.getHeaders().getFilename());
 
     // Any header can be looked up case-insensitively by name, returning the raw value
     System.out.println(part.getHeaders().getHeaderValue("content-type"));

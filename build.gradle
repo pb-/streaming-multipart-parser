@@ -7,7 +7,7 @@ plugins {
 sourceCompatibility = 11
 
 group 'dev.baecher.multipart'
-version '0.9.7'
+version '0.10.0'
 
 java {
     withJavadocJar()
